@@ -17,6 +17,12 @@
     "value": 16,
     "group": "Typography"
   },
+  "emoteSize": {
+    "type": "number",
+    "label": "Emote size",
+    "value": 16,
+    "group": "Typography"
+  },
   "bubbleXOffset": {
     "type": "number",
     "label": "extra x adjustment",
