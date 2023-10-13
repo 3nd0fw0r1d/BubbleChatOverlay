@@ -23,6 +23,12 @@
     "value": 16,
     "group": "Typography"
   },
+  "largeEmoteSize": {
+    "type": "number",
+    "label": "Large emote size",
+    "value": 24,
+    "group": "Typography"
+  },
   "emoteQuality": {
     "type": "dropdown",
     "label": "emote quality:",
@@ -32,6 +38,18 @@
       "med": 2,
       "high": 4
     },
+    "group": "Typography"
+  },
+  "tiltAngle": {
+    "type": "number",
+    "label": "Tilt angle:",
+    "value": 3,
+    "group": "Typography"
+  },
+  "tiltAngleRange": {
+    "type": "number",
+    "label": "Tilt angle random range:",
+    "value": 0,
     "group": "Typography"
   },
   "bubbleXOffset": {
