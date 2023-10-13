@@ -55,7 +55,7 @@
 
 .badge{
     display: inline;
-    height: 12px;
+    height: {{userFontSize}}px;
     position: relative;
     top: 50%;
     transform: translateY(-55%);
@@ -101,7 +101,7 @@
 }
 
 .emote{
-    height: 30px;
+  height: {{emoteSize}}px;
     vertical-align: middle;
     background-repeat: no-repeat;
     padding-bottom: 2px;
