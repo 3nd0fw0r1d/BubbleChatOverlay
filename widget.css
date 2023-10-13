@@ -84,6 +84,11 @@
     background-color: transparent;
 }
 
+.spacer2{
+    flex: 0 1 auto;
+    background-color: transparent;
+}
+
 .user-message{
     display: inline;
     width: auto;
@@ -102,6 +107,15 @@
 
 .emote{
   height: {{emoteSize}}px;
+    vertical-align: middle;
+    background-repeat: no-repeat;
+    padding-bottom: 2px;
+    margin-left: -3px;
+    margin-right: -3px;
+}
+
+.large-emote{
+  height: {{largeEmoteSize}}px;
     vertical-align: middle;
     background-repeat: no-repeat;
     padding-bottom: 2px;
