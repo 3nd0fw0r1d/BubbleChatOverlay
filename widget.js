@@ -5,11 +5,13 @@ let totalMessages = 0,
     provider = "twitch",
     animationIn = "fadeInUp",
     animationOut = "bounceOut",
-    smallDelay = 300,
+    smallDelay = 400,
     badgesEnable = "yes",
     bubbleXOffset = 0,
     bubbleYOffset = 0,
-    emoteQuality = 2;
+    emoteQuality = 2,
+    tiltAngle = 3,
+    tiltAngleRange = 0;
 
 window.addEventListener("onWidgetLoad", function (obj) {
    const fieldData = obj.detail.fieldData;
@@ -30,7 +32,8 @@ window.addEventListener("onWidgetLoad", function (obj) {
      default:
        emoteQuality = 2;
    }
-   console.log(emoteQuality);
+   tiltAngle = fieldData.tiltAngle;
+   tiltAngleRange = fieldData.tiltAngleRange;
    channelName = obj.detail.channel.username;
    console.log(obj.detail.channel);
    ignoredUsers = fieldData.ignoredUsers.toLowerCase().replace(" ", "").split(",");
@@ -183,22 +186,35 @@ window.addEventListener('onEventReceived', function (stream_event) {
 
     let username_spacer = document.createElement("div");
     username_spacer.className = "spacer";
-
+  
+    let message_spacer = document.createElement("div");
+    message_spacer.className = "spacer";
+    let message_spacer2 = document.createElement("div");
+    message_spacer2.className = "spacer2";  
+  
     if (current_username_bias === "left") {
+        message_container_inner_pre.appendChild(message_spacer2);
+      
         username_box_container.appendChild(username_box);
     } else { // if not left then, well, right
-        let message_spacer = document.createElement("div");
-        message_spacer.className = "spacer";
         message_container_inner_pre.appendChild(message_spacer);
+      
         username_box_container.appendChild(username_spacer);
         username_box_container.appendChild(username_box);
     }
 
     message_container_inner.appendChild(username_box_container);
-
     message_container_inner.appendChild(user_message);
   
     message_container_inner_pre.appendChild(message_container_inner);
+  
+    
+  
+    if (current_username_bias === "left") {
+        message_container_inner_pre.appendChild(message_spacer);
+    } else { // if not left then, well, right
+        message_container_inner_pre.appendChild(message_spacer2);
+    }
 
     message_container.appendChild(message_container_inner_pre);
     // the entire message assembly is now complete, ready to append to the scene
@@ -218,16 +234,41 @@ window.addEventListener('onEventReceived', function (stream_event) {
     // EVERYTHING BELOW HERE IS TO ADD THE BUBBLES AND SHADOW
     // SINCE IT HAS TO BE ON SCREEN TO MAKE SURE THE RECT SIZE IS RIGHT
     setTimeout(function(){
+      const outer_rect = list_container.getBoundingClientRect();
       const rect = user_message.getBoundingClientRect();
-      const xy_arr = [ // position of all the bubbles :)
-          [36, 8],
-          [-4, Math.floor(rect.height / 2)],
-          [rect.width - 4, Math.floor(rect.height / 2) - 2],
-          [rect.width - 35, rect.height - 4],
-          [rect.width - 66, rect.height - 12],
-          [rect.width - 58, rect.height + 10],
-          [rect.width - 42, rect.height + 18]
-      ];
+      console.log(outer_rect);
+      console.log(rect);
+      console.log(rect.width / outer_rect.width);
+      let perc = rect.width / outer_rect.width;
+      if (perc < 0.7) {
+        perc = 0.7 - perc;
+        message_spacer2.style.flex = `${perc} 1 auto`;
+        console.log(perc);
+      }
+      
+      
+      let xy_arr = [];
+      if (this_direction === "left") {
+        xy_arr = [ // position of all the bubbles :)
+            [Math.floor(rect.width / 2) - 34, 8],
+            [-4, Math.floor(rect.height / 2)],
+            [rect.width - 4, Math.floor(rect.height / 2) - 2],
+            [rect.width - 35, rect.height - 4],
+            [rect.width - 66, rect.height - 12],
+            [rect.width - 58, rect.height + 10],
+            [rect.width - 42, rect.height + 18]
+        ];
+      } else {
+        xy_arr = [
+          [Math.floor(rect.width / 2) + 32, 8],
+          [rect.width, Math.floor(rect.height / 2)],
+          [4, Math.floor(rect.height / 2) - 2],
+          [35, rect.height - 4],
+          [66, rect.height - 12],
+          [58, rect.height + 10],
+          [42, rect.height + 18]
+        ];
+      }
       const size_arr = [44, 20, 28, 30, 26, 16, 10]; // size of all the bubbles
 
       if (data.channel !== channelName) {
@@ -276,7 +317,8 @@ window.addEventListener('onEventReceived', function (stream_event) {
           }
       }
 
-      message_container_inner_pre.style.transform = this_direction === "left" ? "rotate(-3deg)" : "rotate(3deg)";
+      let tilt = tiltAngle + ((Math.random() * tiltAngleRange) - (tiltAngleRange / 2));
+      message_container_inner_pre.style.transform = this_direction === "left" ? `rotate(${tilt * -1}deg)` : `rotate(${tilt * 1}deg)`;
 
     }, smallDelay);
   
@@ -302,12 +344,21 @@ function attachEmotes(message) {
   let text = message.text;
   let data = message.emotes;
   
-  text = html_encode(text);
+  text = html_encode(text); // turn any nasty stuff into HTML escape chars...
+  let emote_buffer = "";
+  if (data.length > 0) { // if there are emotes in the message...
+    for (let i=0; i < data.length; i++) {
+      let emote = data[i];
+      emote_buffer += emote.name
+    }
+  }
+  
+  let emote_class = text.length === emote_buffer.length + data.length - 1 ? "large-emote" : "emote";
   
   if (data.length > 0) { // if there are emotes in the message...
     for (let i=0; i < data.length; i++) {
       let emote = data[i];
-      let img = `<img class="emote" src=${emote.urls[emoteQuality]}>`;
+      let img = `<img class=${emote_class} src=${emote.urls[emoteQuality]}>`;
       text = text.replace(emote.name, img);
     }
   }
