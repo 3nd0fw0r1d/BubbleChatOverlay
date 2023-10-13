@@ -1,3 +1,4 @@
+@import url('https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css');
 * {
     font-family: "Rotten Font", 'Arial', sans-serif;
     color: rgb(0, 255, 0);
@@ -15,9 +16,10 @@
     display: inline-flex;
     flex-direction: column;
     justify-content: flex-end;
-    align-items: flex-start;
-    align-content: flex-start;
-    height: 97%;
+    align-items: flex-end;
+    align-content: flex-end;
+    height: 98%;
+    width: 100%;
     margin-bottom: 10px;
     box-sizing: border-box;
     background-color: transparent;
@@ -29,9 +31,16 @@
     flex: 0 0 auto;
     width: 98%;
     margin-bottom: -14px;
-    margin-top: -8px;
+    margin-top: -4px;
     background-color: transparent;
     vertical-align: baseline;
+}
+
+.message-row-container-pre{
+    display: inline-flex;
+    flex-direction: row;
+    flex: 0 0 auto;
+    width: 100%;
 }
 
 .message-row-container{
@@ -41,7 +50,6 @@
     width: auto;
     max-width: 80%;
     background-color: transparent;
-    padding: 5px;
     vertical-align: baseline;
 }
 
@@ -83,7 +91,7 @@
     word-wrap: break-word;
     background-color: white;
     text-align: left;
-    padding: 8px;
+    padding: 16px;
     margin: 8px;
     border-radius: 20px;
     transform: translate(0, -16px);
