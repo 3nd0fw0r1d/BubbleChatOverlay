@@ -1,4 +1,4 @@
- {
+{
   "testMessage": {
     "type": "button",
     "label": "Test message",
@@ -50,6 +50,16 @@
       "zoomInUp": "zoomInUp",
       "jackInTheBox": "jackInTheBox",
       "rollIn": "rollIn"
+    },
+    "group": "Settings"
+  },
+  "badgesEnable": {
+    "type": "dropdown",
+    "label": "enable badges:",
+    "value": "yes",
+    "options": {
+      "yes": "yes",
+      "no": "no"
     },
     "group": "Settings"
   }
