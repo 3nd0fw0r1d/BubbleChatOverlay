@@ -1,0 +1,122 @@
+* {
+    font-family: "Rotten Font", 'Arial', sans-serif;
+    color: rgb(0, 255, 0);
+    overflow: visible;
+    font-weight: normal;
+    text-shadow: 1px 1px rgb(30, 30, 30);
+}
+
+.main-spacer{
+    flex: 1 1 auto;
+    background-color: transparent;
+}
+
+.main-container{
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-start;
+    align-content: flex-start;
+    height: 97%;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+    background-color: transparent;
+}
+
+.message-row{
+    display: inline-flex;
+    flex-direction: row;
+    flex: 0 0 auto;
+    width: 98%;
+    margin-bottom: -14px;
+    margin-top: -8px;
+    background-color: transparent;
+    vertical-align: baseline;
+}
+
+.message-row-container{
+    display: inline-flex;
+    flex-direction: column;
+    flex: 0 0 auto;
+    width: auto;
+    max-width: 80%;
+    background-color: transparent;
+    padding: 5px;
+    vertical-align: baseline;
+}
+
+.badge{
+    display: inline;
+    height: 12px;
+    position: relative;
+    top: 50%;
+    transform: translateY(-55%);
+    margin: 2px;
+}
+
+.user-box-container{
+    display: inline-flex;
+    flex: 0 0 auto;
+}
+
+.user-box{
+    flex: 0 0 auto;
+    padding: 4px 6px 4px 4px;
+    border-radius: 10px;
+    z-index: 10;
+}
+
+.user-box > span{
+    font-size: 12px;
+    color: white;
+}
+
+.spacer{
+    flex: 1 1 auto;
+    background-color: transparent;
+}
+
+.user-message{
+    display: inline;
+    width: auto;
+    font-size: 15px;
+    word-wrap: break-word;
+    background-color: white;
+    text-align: left;
+    padding: 8px;
+    margin: 8px;
+    border-radius: 20px;
+    transform: translate(0, -16px);
+    z-index: 5;
+    align-items: center;
+    justify-content: center;
+}
+
+.emote{
+    height: 30px;
+    vertical-align: middle;
+    background-repeat: no-repeat;
+    padding-bottom: 2px;
+}
+
+.message-shadow{
+    border-radius: 20px;
+    position: absolute;
+    transform: translate(4px, 24px);
+    z-index: 3;
+}
+
+.bubble {
+    width: 44px;
+    height: 44px;
+    background-color: white;
+    border-radius: 50%;
+    display: block;
+    position: absolute;
+    z-index: 3;
+}
+
+
+.action{
+    font-style: italic;
+}

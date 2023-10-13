@@ -1,0 +1,56 @@
+ {
+  "testMessage": {
+    "type": "button",
+    "label": "Test message",
+    "value": "Test message",
+    "group": "Test"
+  },
+  "ignoredUsers": {
+    "label": "Ignored users (comma separated)",
+    "type": "text",
+    "value": "StreamElements,OtherBot",
+    "group": "Settings"
+  },
+  "animationIn": {
+    "type": "dropdown",
+    "label": "Animation In:",
+    "value": "none",
+    "options": {
+      "none": "None",
+      "bounceIn": "bounceIn",
+      "bounceInDown": "bounceInDown",
+      "bounceInLeft": "bounceInLeft",
+      "bounceInRight": "bounceInRight",
+      "bounceInUp": "bounceInUp",
+      "fadeIn": "fadeIn",
+      "fadeInDown": "fadeInDown",
+      "fadeInDownBig": "fadeInDownBig",
+      "fadeInLeft": "fadeInLeft",
+      "fadeInLeftBig": "fadeInLeftBig",
+      "fadeInRight": "fadeInRight",
+      "fadeInRightBig": "fadeInRightBig",
+      "fadeInUp": "fadeInUp",
+      "fadeInUpBig": "fadeInUpBig",
+      "flipInX": "flipInX",
+      "flipInY": "flipInY",
+      "lightSpeedIn": "lightSpeedIn",
+      "rotateIn": "rotateIn",
+      "rotateInDownLeft": "rotateInDownLeft",
+      "rotateInDownRight": "rotateInDownRight",
+      "rotateInUpLeft": "rotateInUpLeft",
+      "rotateInUpRight": "rotateInUpRight",
+      "slideInUp": "slideInUp",
+      "slideInDown": "slideInDown",
+      "slideInLeft": "slideInLeft",
+      "slideInRight": "slideInRight",
+      "zoomIn": "zoomIn",
+      "zoomInDown": "zoomInDown",
+      "zoomInLeft": "zoomInLeft",
+      "zoomInRight": "zoomInRight",
+      "zoomInUp": "zoomInUp",
+      "jackInTheBox": "jackInTheBox",
+      "rollIn": "rollIn"
+    },
+    "group": "Settings"
+  }
+}
