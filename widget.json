@@ -5,6 +5,30 @@
     "value": "Test message",
     "group": "Test"
   },
+  "userFontSize": {
+    "type": "number",
+    "label": "Username font size",
+    "value": 24,
+    "group": "Typography"
+  },
+  "messageFontSize": {
+    "type": "number",
+    "label": "Message font size",
+    "value": 16,
+    "group": "Typography"
+  },
+  "bubbleXOffset": {
+    "type": "number",
+    "label": "extra x adjustment",
+    "value": 0,
+    "group": "Typography"
+  },
+  "bubbleYOffset": {
+    "type": "number",
+    "label": "extra y adjustment",
+    "value": 0,
+    "group": "Typography"
+  },
   "ignoredUsers": {
     "label": "Ignored users (comma separated)",
     "type": "text",
