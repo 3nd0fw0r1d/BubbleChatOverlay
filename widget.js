@@ -5,10 +5,11 @@ let totalMessages = 0,
     provider = "twitch",
     animationIn = "fadeInUp",
     animationOut = "bounceOut",
-    smallDelay = 250,
+    smallDelay = 300,
     badgesEnable = "yes",
     bubbleXOffset = 0,
-    bubbleYOffset = 0;
+    bubbleYOffset = 0,
+    emoteQuality = 2;
 
 window.addEventListener("onWidgetLoad", function (obj) {
    const fieldData = obj.detail.fieldData;
@@ -16,7 +17,22 @@ window.addEventListener("onWidgetLoad", function (obj) {
    badgesEnable = fieldData.badgesEnable;
    bubbleXOffset = fieldData.bubbleXOffset;
    bubbleYOffset = fieldData.bubbleYOffset;
+   switch (fieldData.emoteQuality) {
+     case "low":
+       emoteQuality = 1;
+       break;
+     case "med":
+       emoteQuality = 2;
+       break;
+     case "high":
+       emoteQuality = 4;
+       break;
+     default:
+       emoteQuality = 2;
+   }
+   console.log(emoteQuality);
    channelName = obj.detail.channel.username;
+   console.log(obj.detail.channel);
    ignoredUsers = fieldData.ignoredUsers.toLowerCase().replace(" ", "").split(",");
 });
 
@@ -271,7 +287,7 @@ window.addEventListener('onEventReceived', function (stream_event) {
 })
 
 
-function html_encode(e) { // I presume this just removes characters that would break the HTML
+function html_encode(e) { // sanitizes user input
     return e.replace(/[<>"^]/g, function (e) {
         return "&#" + e.charCodeAt(0) + ";";
     });
@@ -283,49 +299,17 @@ async function on_load() {
 }
 
 function attachEmotes(message) {
-    let text = html_encode(message.text); // sanitize that dirty, dirty user input
-    let data = message.emotes;
-    if (typeof message.attachment !== "undefined") {
-        if (typeof message.attachment.media !== "undefined") {
-            if (typeof message.attachment.media.image !== "undefined") {
-                text = `${message.text}<img src="${message.attachment.media.image.src}">`;
-            }
-        }
+  let text = message.text;
+  let data = message.emotes;
+  
+  text = html_encode(text);
+  
+  if (data.length > 0) { // if there are emotes in the message...
+    for (let i=0; i < data.length; i++) {
+      let emote = data[i];
+      let img = `<img class="emote" src=${emote.urls[emoteQuality]}>`;
+      text = text.replace(emote.name, img);
     }
-    return text
-        .replace(
-            /([^\s]*)/gi,
-            function (m, key) {
-                let result = data.filter(emote => {
-                    return html_encode(emote.name) === key
-                });
-                if (typeof result[0] !== "undefined") {
-                    let url = result[0]['urls'][1];
-                    if (provider === "twitch") {
-                        return `<img class="emote" " src="${url}"/>`;
-                    } else {
-                        if (typeof result[0].coords === "undefined") {
-                            result[0].coords = {x: 0, y: 0};
-                        }
-                        let x = parseInt(result[0].coords.x);
-                        let y = parseInt(result[0].coords.y);
-
-                        let width = "{emoteSize}px";
-                        let height = "auto";
-
-                        if (provider === "mixer") {
-                            console.log(result[0]);
-                            if (result[0].coords.width) {
-                                width = `${result[0].coords.width}px`;
-                            }
-                            if (result[0].coords.height) {
-                                height = `${result[0].coords.height}px`;
-                            }
-                        }
-                        return `<div class="emote" style="width: ${width}; height:${height}; display: inline-block; background-image: url(${url}); background-position: -${x}px -${y}px;"></div>`;
-                    }
-                } else return key;
-
-            }
-        );
+  }
+  return text;
 }
