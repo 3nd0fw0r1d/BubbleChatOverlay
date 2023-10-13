@@ -80,14 +80,14 @@ function send_test_message() {
 
 
 window.addEventListener('onEventReceived', function (stream_event) {
-
+  
     if (stream_event.detail.event.listener === "widget-button") {
         if (stream_event.detail.event.field === "testMessage") {
             send_test_message();
             return;
         }
     }
-
+  
     if (stream_event.detail.listener === "delete-message") {
         const msgId = stream_event.detail.event.msgId;
         $(`.message-row[data-msgid=${msgId}]`).remove();
@@ -118,9 +118,9 @@ window.addEventListener('onEventReceived', function (stream_event) {
     message_container.setAttribute("data-sender", data.userId);
     message_container.setAttribute("data-msgid", data.msgId);
     message_container.id = `msg-${totalMessages}`;
-
+  
     let message_container_inner_pre = document.createElement("div");
-    message_container_inner_pre.className = "message-row-container";
+    message_container_inner_pre.className = "message-row-container-pre";
 
     let message_container_inner = document.createElement("div");
     message_container_inner.className = "message-row-container";
@@ -164,7 +164,7 @@ window.addEventListener('onEventReceived', function (stream_event) {
     } else { // if not left then, well, right
         let message_spacer = document.createElement("div");
         message_spacer.className = "spacer";
-        message_container.appendChild(message_spacer);
+        message_container_inner_pre.appendChild(message_spacer);
         username_box_container.appendChild(username_spacer);
         username_box_container.appendChild(username_box);
     }
@@ -172,7 +172,7 @@ window.addEventListener('onEventReceived', function (stream_event) {
     message_container_inner.appendChild(username_box_container);
 
     message_container_inner.appendChild(user_message);
-
+  
     message_container_inner_pre.appendChild(message_container_inner);
 
     message_container.appendChild(message_container_inner_pre);
@@ -238,13 +238,13 @@ window.addEventListener('onEventReceived', function (stream_event) {
     }
 
     message_container_inner_pre.style.transform = current_username_bias === "left" ? "rotate(-3deg)" : "rotate(3deg)";
-
+  
     if (current_username_bias === "right") {
         current_username_bias = "left";
     } else {
         current_username_bias = "right";
     }
-
+  
   	let main_spacer = document.getElementsByClassName("main-spacer")[0];
     while (main_spacer.clientHeight == 0) {
         list_container.removeChild(list_container.childNodes[2]);
