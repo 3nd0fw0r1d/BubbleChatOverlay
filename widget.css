@@ -75,7 +75,7 @@
 }
 
 .user-box > span{
-    font-size: 12px;
+    font-size: {{userFontSize}}px;
     color: white;
 }
 
@@ -87,7 +87,7 @@
 .user-message{
     display: inline;
     width: auto;
-    font-size: 15px;
+    font-size: {{messageFontSize}}px;
     word-wrap: break-word;
     background-color: white;
     text-align: left;
@@ -112,7 +112,6 @@
 .message-shadow{
     border-radius: 20px;
     position: absolute;
-    transform: translate(4px, 24px);
     z-index: 3;
 }
 
