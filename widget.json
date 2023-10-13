@@ -36,13 +36,13 @@
   },
   "bubbleXOffset": {
     "type": "number",
-    "label": "extra x adjustment",
+    "label": "Decoration x adjustment",
     "value": 0,
     "group": "Typography"
   },
   "bubbleYOffset": {
     "type": "number",
-    "label": "extra y adjustment",
+    "label": "Decoration y adjustment",
     "value": 0,
     "group": "Typography"
   },
