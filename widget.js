@@ -1,4 +1,4 @@
-let totalMessages = 0,
+ let totalMessages = 0,
     messagesLimit = 20,
     ignoredUsers = [],
     channelName = "testchannel",
@@ -6,12 +6,16 @@ let totalMessages = 0,
     animationIn = "fadeInUp",
     animationOut = "bounceOut",
     smallDelay = 250,
-    badgesEnable = "yes";
+    badgesEnable = "yes",
+    bubbleXOffset = 0,
+    bubbleYOffset = 0;
 
 window.addEventListener("onWidgetLoad", function (obj) {
    const fieldData = obj.detail.fieldData;
    animationIn = fieldData.animationIn;
    badgesEnable = fieldData.badgesEnable;
+   bubbleXOffset = fieldData.bubbleXOffset;
+   bubbleYOffset = fieldData.bubbleYOffset;
    channelName = obj.detail.channel.username;
    ignoredUsers = fieldData.ignoredUsers.toLowerCase().replace(" ", "").split(",");
 });
@@ -214,6 +218,8 @@ window.addEventListener('onEventReceived', function (stream_event) {
           for (let i = 0; i < xy_arr.length; i++) { // background bubbles
               let x_off = Math.floor(xy_arr[i][0] - (size_arr[i] / 2)) + 12; // manual offsets also because why not
               let y_off = Math.floor(xy_arr[i][1] - (size_arr[i] / 2)) + 36 - 16; // the -16 is to match the CSS offset
+              x_off += bubbleXOffset;
+              y_off += bubbleYOffset;
               x_off -= 4;
               y_off += 4; // then offset diagonally since these are the shadows
 
@@ -232,6 +238,7 @@ window.addEventListener('onEventReceived', function (stream_event) {
       shadow_elem.className = "message-shadow";
       shadow_elem.style.width = `${rect.width}px`; // an actual drop shadow in CSS ends up in front of the bubbles
       shadow_elem.style.height = `${rect.height}px`; // hence this jank
+      shadow_elem.style.transform = `translate(${4 + bubbleXOffset}px, ${24 + bubbleYOffset}px)`;
       shadow_elem.style.backgroundColor = user_color;
 
       message_container_inner.appendChild(shadow_elem);
@@ -240,6 +247,8 @@ window.addEventListener('onEventReceived', function (stream_event) {
           for (let i = 0; i < xy_arr.length; i++) { // foreground bubbles
               let x_off = Math.floor(xy_arr[i][0] - (size_arr[i] / 2)) + 12;
               let y_off = Math.floor(xy_arr[i][1] - (size_arr[i] / 2)) + 36 - 16;
+              x_off += bubbleXOffset;
+              y_off += bubbleYOffset;
 
               let test = document.createElement("div");
               test.className = "bubble";
