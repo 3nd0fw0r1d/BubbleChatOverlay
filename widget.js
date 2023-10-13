@@ -1,4 +1,4 @@
- let totalMessages = 0,
+let totalMessages = 0,
     messagesLimit = 20,
     ignoredUsers = [],
     channelName = "testchannel",
