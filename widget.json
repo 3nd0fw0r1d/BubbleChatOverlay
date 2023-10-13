@@ -23,6 +23,17 @@
     "value": 16,
     "group": "Typography"
   },
+  "emoteQuality": {
+    "type": "dropdown",
+    "label": "emote quality:",
+    "value": 1,
+    "options": {
+      "low": 1,
+      "med": 2,
+      "high": 4
+    },
+    "group": "Typography"
+  },
   "bubbleXOffset": {
     "type": "number",
     "label": "extra x adjustment",
