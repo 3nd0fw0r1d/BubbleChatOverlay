@@ -12,7 +12,8 @@ let totalMessages = 0,
     emoteQuality = 2,
     tiltAngle = 3,
     tiltAngleRange = 0,
-    colorValueClip = 90;
+    colorValueClip = 90,
+    messageFontDarkening = 0;
 
 const lorem_ipsum = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
 window.addEventListener("onWidgetLoad", function (obj) {
@@ -37,6 +38,7 @@ window.addEventListener("onWidgetLoad", function (obj) {
    tiltAngle = fieldData.tiltAngle;
    tiltAngleRange = fieldData.tiltAngleRange;
    colorValueClip = fieldData.colorValueClip;
+   messageFontDarkening = fieldData.messageFontDarkening;
    channelName = obj.detail.channel.username;
    ignoredUsers = fieldData.ignoredUsers.toLowerCase().replace(" ", "").split(",");
 });
@@ -144,10 +146,13 @@ window.addEventListener('onEventReceived', function (stream_event) {
 
     let user_color = data.displayColor !== "" ? data.displayColor : "#" + (md5(data.displayName).slice(26));
     let color = new Color(user_color);
+    let text_color = new Color(user_color);
     if (color.hsl.l > colorValueClip) {
       color.hsl.l = colorValueClip;
       user_color = color.toString();
     }
+    text_color.hsl.l = color.hsl.l;
+    text_color.hsl.l *= (messageFontDarkening / 100);
     // the above gets the username color from twitch, or generates a random color if that for some reason returns nothing
 
     let message_container = document.createElement("div");
@@ -187,7 +192,7 @@ window.addEventListener('onEventReceived', function (stream_event) {
 
     let user_message = document.createElement("div");
     user_message.className = "user-message"; // contains the user message and/or any emotes
-    user_message.style.color = user_color;
+    user_message.style.color = text_color.toString();
     // user_message.style.boxShadow = `-5px 5px ${user_color}`;
 
     user_message.innerHTML += attachEmotes(data); // this'll probably be fine as-is...
