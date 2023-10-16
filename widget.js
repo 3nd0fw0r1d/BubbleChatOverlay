@@ -11,7 +11,11 @@ let totalMessages = 0,
     bubbleYOffset = 0,
     emoteQuality = 2,
     tiltAngle = 3,
-    tiltAngleRange = 0;
+    tiltAngleRange = 0,
+    colorValueClip = 90,
+    colorSaturationClip = 10;
+
+
 
 window.addEventListener("onWidgetLoad", function (obj) {
    const fieldData = obj.detail.fieldData;
@@ -34,6 +38,8 @@ window.addEventListener("onWidgetLoad", function (obj) {
    }
    tiltAngle = fieldData.tiltAngle;
    tiltAngleRange = fieldData.tiltAngleRange;
+   colorValueClip = fieldData.colorValueClip;
+   colorSaturationClip = fieldData.colorSaturationClip;
    channelName = obj.detail.channel.username;
    console.log(obj.detail.channel);
    ignoredUsers = fieldData.ignoredUsers.toLowerCase().replace(" ", "").split(",");
@@ -136,6 +142,13 @@ window.addEventListener('onEventReceived', function (stream_event) {
 
 
     let user_color = data.displayColor !== "" ? data.displayColor : "#" + (md5(data.displayName).slice(26));
+    console.log(data.displayColor);
+    let color = new Color(user_color);
+    console.log(color.hsv);
+    if (color.hsv.v > colorValueClip && color.hsv.s < colorSaturationClip) {
+      color.hsv.v = colorValueClip;
+      user_color = color.toString();
+    }
     // the above gets the username color from twitch, or generates a random color if that for some reason returns nothing
 
     let message_container = document.createElement("div");
