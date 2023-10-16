@@ -64,6 +64,18 @@
     "value": 0,
     "group": "Typography"
   },
+  "colorValueClip": {
+    "type": "number",
+    "label": "Color lightness clip threshold, 0-100",
+    "value": 0,
+    "group": "Typography"
+  },
+  "colorSaturationClip": {
+    "type": "number",
+    "label": "Color saturation maximum of where it considers clipping the lightness, 0-100",
+    "value": 0,
+    "group": "Typography"
+  },
   "ignoredUsers": {
     "label": "Ignored users (comma separated)",
     "type": "text",
