@@ -17,6 +17,12 @@
     "value": 16,
     "group": "Typography"
   },
+  "messageFontDarkening": {
+    "type": "number",
+    "label": "Message font lightness percentage",
+    "value": 70,
+    "group": "Typography"
+  },
   "emoteSize": {
     "type": "number",
     "label": "Emote size",
