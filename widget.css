@@ -3,8 +3,17 @@
     font-family: "Rotten Font", 'Arial', sans-serif;
     color: rgb(0, 255, 0);
     overflow: visible;
-    font-weight: normal;
-    text-shadow: 1px 1px rgb(30, 30, 30);
+    font-weight: 600;
+    /*text-shadow:
+      0.4px 0px 0px rgb(30, 30, 30),
+      -0.4px 0px 0px rgb(30, 30, 30),
+      0px 0.4px 0px rgb(30, 30, 30),
+      0px -0.4px 0px rgb(30, 30, 30),
+      0.35px 0.35px 0px rgb(30, 30, 30),
+      -0.35px 0.35px 0px rgb(30, 30, 30),
+      0.35px -0.35px 0px rgb(30, 30, 30),
+      -0.35px -0.35px 0px rgb(30, 30, 30);*/
+    /*text-rendering: geometricPrecision;*/
 }
 
 .main-spacer{
