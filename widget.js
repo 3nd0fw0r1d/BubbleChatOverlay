@@ -14,8 +14,7 @@ let totalMessages = 0,
     tiltAngleRange = 0,
     colorValueClip = 90;
 
-
-
+const lorem_ipsum = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
 window.addEventListener("onWidgetLoad", function (obj) {
    const fieldData = obj.detail.fieldData;
    animationIn = fieldData.animationIn;
@@ -39,13 +38,17 @@ window.addEventListener("onWidgetLoad", function (obj) {
    tiltAngleRange = fieldData.tiltAngleRange;
    colorValueClip = fieldData.colorValueClip;
    channelName = obj.detail.channel.username;
-   console.log(obj.detail.channel);
    ignoredUsers = fieldData.ignoredUsers.toLowerCase().replace(" ", "").split(",");
 });
 
 let current_username_bias = "left";
 
 function send_test_message() {
+    let lorem_ipsum_arr = lorem_ipsum.split(" ");
+    let out_length = Math.floor(Math.random() * lorem_ipsum_arr.length);
+    if (out_length === 0) out_length = 1;
+    let message_text = lorem_ipsum_arr.slice(0, out_length).join(" ");
+    let test_color = new Color("hsl", [Math.random() * 360, Math.random() * 100, Math.random() * 100]);
     let emulated = new CustomEvent("onEventReceived", {
         detail: {
             listener: "message", event: {
@@ -55,7 +58,7 @@ function send_test_message() {
                     tags: {
                         "badge-info": "",
                         badges: "moderator/1,partner/1",
-                        color: "#8822FF",
+                        color: test_color.toString(),
                         "display-name": "testUser",
                         emotes: "25:46-50",
                         flags: "",
@@ -71,7 +74,7 @@ function send_test_message() {
                     nick: "StreamElements",
                     userId: "100135110",
                     displayName: "testUser",
-                    displayColor: "#8822FF",
+                    displayColor: test_color.toString(),
                     badges: [{
                         type: "moderator",
                         version: "1",
@@ -84,7 +87,7 @@ function send_test_message() {
                         description: "Verified"
                     }],
                     channel: "test",
-                    text: "Howdy! My name is Bill and I am here to serve Kappa",
+                    text: message_text,
                     isAction: !1,
                     emotes: [{
                         type: "twitch",
@@ -140,9 +143,7 @@ window.addEventListener('onEventReceived', function (stream_event) {
 
 
     let user_color = data.displayColor !== "" ? data.displayColor : "#" + (md5(data.displayName).slice(26));
-    console.log(data.displayColor);
     let color = new Color(user_color);
-    console.log(color.hsl);
     if (color.hsl.l > colorValueClip) {
       color.hsl.l = colorValueClip;
       user_color = color.toString();
@@ -151,7 +152,6 @@ window.addEventListener('onEventReceived', function (stream_event) {
 
     let message_container = document.createElement("div");
     message_container.className = `message-row {animationIn} animated`; // this is to contain ALL the message elements
-    console.log(message_container.className);
     message_container.setAttribute("data-sender", data.userId);
     message_container.setAttribute("data-msgid", data.msgId);
     message_container.id = `msg-${totalMessages}`;
@@ -247,14 +247,10 @@ window.addEventListener('onEventReceived', function (stream_event) {
     setTimeout(function(){
       const outer_rect = list_container.getBoundingClientRect();
       const rect = user_message.getBoundingClientRect();
-      console.log(outer_rect);
-      console.log(rect);
-      console.log(rect.width / outer_rect.width);
       let perc = rect.width / outer_rect.width;
       if (perc < 0.7) {
         perc = 0.7 - perc;
         message_spacer2.style.flex = `${perc} 1 auto`;
-        console.log(perc);
       }
       
       
