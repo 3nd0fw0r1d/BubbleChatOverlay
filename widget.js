@@ -13,7 +13,8 @@ let totalMessages = 0,
     tiltAngle = 3,
     tiltAngleRange = 0,
     colorValueClip = 90,
-    messageFontDarkening = 0;
+    messageFontDarkening = 0,
+    saturationMultiplier = 1;
 
 const lorem_ipsum = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
 window.addEventListener("onWidgetLoad", function (obj) {
@@ -146,13 +147,15 @@ window.addEventListener('onEventReceived', function (stream_event) {
 
     let user_color = data.displayColor !== "" ? data.displayColor : "#" + (md5(data.displayName).slice(26));
     let color = new Color(user_color);
-    let text_color = new Color(user_color);
+    color.hsl.s *= saturationMultiplier;
+    let text_color = color;
     if (color.hsl.l > colorValueClip) {
       color.hsl.l = colorValueClip;
       user_color = color.toString();
     }
     text_color.hsl.l = color.hsl.l;
     text_color.hsl.l *= (messageFontDarkening / 100);
+    
     // the above gets the username color from twitch, or generates a random color if that for some reason returns nothing
 
     let message_container = document.createElement("div");
@@ -307,7 +310,7 @@ window.addEventListener('onEventReceived', function (stream_event) {
       shadow_elem.className = "message-shadow";
       shadow_elem.style.width = `${rect.width}px`; // an actual drop shadow in CSS ends up in front of the bubbles
       shadow_elem.style.height = `${rect.height}px`; // hence this jank
-      shadow_elem.style.transform = `translate(${4 + bubbleXOffset}px, ${24 + bubbleYOffset}px)`;
+      shadow_elem.style.transform = `translate(${4 + bubbleXOffset}px, ${20 + bubbleYOffset}px)`;
       shadow_elem.style.backgroundColor = user_color;
 
       message_container_inner.appendChild(shadow_elem);
