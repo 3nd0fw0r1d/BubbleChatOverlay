@@ -174,6 +174,7 @@ window.addEventListener('onEventReceived', function (stream_event) {
     let username_box = document.createElement("div");
     username_box.className = "user-box";
     username_box.style.backgroundColor = user_color; // set the username box color as the twitch username color
+    username_box.style.textShadow = "-2px 2px " + text_color.toString();
     // typically the CSS is used to define the static colors for things otherwise
 
     if (badgesEnable === "yes") {
