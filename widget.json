@@ -23,6 +23,12 @@
     "value": 70,
     "group": "Typography"
   },
+  "saturationMultiplier": {
+    "type": "number",
+    "label": "Color saturation multiplier",
+    "value": 1,
+    "group": "Typography"
+  },
   "emoteSize": {
     "type": "number",
     "label": "Emote size",
