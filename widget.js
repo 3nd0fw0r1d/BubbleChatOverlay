@@ -3,7 +3,7 @@ let ignoredUsers = [],
     provider = "twitch",
     animationIn = "fadeInRight",
     animationOut = "bounceOut",
-    smallDelay = 300,
+    smallDelay = 10,
     badgesEnable = "yes",
     bubbleXOffset = -6,
     bubbleYOffset = 6,
@@ -293,6 +293,7 @@ class UserMessage {
             both_container.style.transform = direction === "left" ? `rotate(${tilt * -1}deg)` : `rotate(${tilt * 1}deg)`;
 
         }, smallDelay);
+
     }
     get elem() {
         return this.container;
@@ -330,9 +331,9 @@ window.addEventListener('onEventReceived', function(stream_event){
     list_container.appendChild(message.elem);
 
     current_username_bias = current_username_bias === "left" ? "right" : "left";
-  
+
     let main_spacer = document.getElementsByClassName("main-spacer")[0];
     while (main_spacer.clientHeight == 0) {
-        list_container.removeChild(list_container.childNodes[2]);
+      list_container.removeChild(list_container.childNodes[2]);
     }
 });
