@@ -3,7 +3,7 @@ let ignoredUsers = [],
     provider = "twitch",
     animationIn = "fadeInRight",
     animationOut = "bounceOut",
-    smallDelay = 10,
+    smallDelay = 20,
     badgesEnable = "yes",
     bubbleXOffset = -6,
     bubbleYOffset = 6,
@@ -195,8 +195,11 @@ class UserMessage {
         this.message_container.appendChild(this.message_box);
 
         this.container.appendChild(this.anim_container);
-
-        let user_color = new Color(data.displayColor);
+		
+      	let user_color = new Color("hsl", [Math.random() * 360, Math.random() * 100, Math.random() * 100]);
+        if (data.displayColor !== "") {
+          user_color = new Color(data.displayColor);
+        }
         user_color.hsl.s *= saturationMultiplier;
         if (user_color.hsl.l > colorValueClip) {
             user_color.hsl.l = colorValueClip;
@@ -213,8 +216,11 @@ class UserMessage {
         let both_container = this.both_container;
         let outer_spacer = this.outer_spacer;
         let anim_container = this.anim_container;
+       
+        console.log("step 1...");
 
         setTimeout(function() {
+            console.log("step 2...");
 			let list_container = document.getElementsByClassName("main-container")[0];
           	const outer_rect = list_container.getBoundingClientRect();
             let rect = message_box.getBoundingClientRect();
@@ -256,7 +262,7 @@ class UserMessage {
             }
             const size_arr = [44, 20, 28, 30, 26, 16, 10];
 
-            if (data.channel !== channelName) {
+            if (data.nick !== channelName) {
                 for (let i = 0; i < xy_arr.length; i++) { // background bubbles
                     let x_off = Math.floor(xy_arr[i][0] - (size_arr[i] / 2));
                     let y_off = Math.floor(xy_arr[i][1] - (size_arr[i] / 2)) - 16; // the -16 is to match the CSS offset
@@ -274,7 +280,7 @@ class UserMessage {
                 }
             }
 
-            if (data.channel !== channelName) {
+            if (data.nick !== channelName) {
                 for (let i = 0; i < xy_arr.length; i++) { // foreground bubbles
                     let x_off = Math.floor(xy_arr[i][0] - (size_arr[i] / 2));
                     let y_off = Math.floor(xy_arr[i][1] - (size_arr[i] / 2)) - 16;
@@ -291,7 +297,7 @@ class UserMessage {
 
             let tilt = tiltAngle + ((Math.random() * tiltAngleRange) - (tiltAngleRange / 2));
             both_container.style.transform = direction === "left" ? `rotate(${tilt * -1}deg)` : `rotate(${tilt * 1}deg)`;
-
+            console.log("step 3...");
         }, smallDelay);
 
     }
@@ -301,6 +307,7 @@ class UserMessage {
 }
 
 window.addEventListener('onEventReceived', function(stream_event){
+    console.log(stream_event);
     if (stream_event.detail.event.listener === "widget-button") {
         if (stream_event.detail.event.field === "testMessage") {
             send_test_message();
@@ -320,6 +327,7 @@ window.addEventListener('onEventReceived', function(stream_event){
     }
 
     let data = stream_event.detail.event.data;
+    console.log(data);
 
     if (stream_event.detail.listener !== "message") return;
     if (ignoredUsers.indexOf(data.nick) !== -1) return;
