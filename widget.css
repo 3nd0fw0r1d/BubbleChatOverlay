@@ -29,7 +29,6 @@
     flex: 0 0 auto;
     justify-content: stretch;
     width: 100%;
-    border: 1px solid green;
 }
 
 .both-container{
@@ -64,13 +63,11 @@
 .outer-spacer{
     flex: 0 1 auto;
     background-color: transparent;
-    border: 1px solid red;
 }
 
 .inner-spacer{
     flex: 1 1 auto;
     background-color: transparent;
-    border: 1px solid blue;
 }
 
 .message-container{
