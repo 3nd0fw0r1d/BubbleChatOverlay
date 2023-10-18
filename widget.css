@@ -91,10 +91,6 @@
     justify-content: center;
 }
 
-.emote_container {
-  
-}
-
 .emote{
     height: {{emoteSize}}px;
     width: {{emoteSize}}px;
@@ -103,10 +99,6 @@
     padding-bottom: 2px;
     margin-left: -3px;
     margin-right: -3px;
-}
-
-.large_emote_container {
-  
 }
 
 .large-emote{
