@@ -1,19 +1,10 @@
 @import url('https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css');
+
 * {
     font-family: "Rotten Font", 'Arial', sans-serif;
     color: rgb(0, 255, 0);
     overflow: visible;
     font-weight: 600;
-    /*text-shadow:
-      0.4px 0px 0px rgb(30, 30, 30),
-      -0.4px 0px 0px rgb(30, 30, 30),
-      0px 0.4px 0px rgb(30, 30, 30),
-      0px -0.4px 0px rgb(30, 30, 30),
-      0.35px 0.35px 0px rgb(30, 30, 30),
-      -0.35px 0.35px 0px rgb(30, 30, 30),
-      0.35px -0.35px 0px rgb(30, 30, 30),
-      -0.35px -0.35px 0px rgb(30, 30, 30);*/
-    /*text-rendering: geometricPrecision;*/
 }
 
 .main-spacer{
@@ -24,9 +15,7 @@
 .main-container{
     display: inline-flex;
     flex-direction: column;
-    justify-content: flex-end;
-    align-items: flex-end;
-    align-content: flex-end;
+    justify-content: stretch;
     height: 98%;
     width: 100%;
     margin-bottom: 10px;
@@ -34,25 +23,16 @@
     background-color: transparent;
 }
 
-.message-row{
+.anim-container{
     display: inline-flex;
     flex-direction: row;
     flex: 0 0 auto;
-    width: 98%;
-    margin-bottom: -14px;
-    margin-top: -4px;
-    background-color: transparent;
-    vertical-align: baseline;
-}
-
-.message-row-container-pre{
-    display: inline-flex;
-    flex-direction: row;
-    flex: 0 0 auto;
+    justify-content: stretch;
     width: 100%;
+    border: 1px solid green;
 }
 
-.message-row-container{
+.both-container{
     display: inline-flex;
     flex-direction: column;
     flex: 0 0 auto;
@@ -60,45 +40,45 @@
     max-width: 80%;
     background-color: transparent;
     vertical-align: baseline;
+    margin-bottom: -16px;
+    margin-top: -6px;
 }
 
-.badge{
-    display: inline;
-    height: {{userFontSize}}px;
-    position: relative;
-    top: 50%;
-    transform: translateY(-55%);
-    margin: 2px;
-}
-
-.user-box-container{
+.username-container{
     display: inline-flex;
     flex: 0 0 auto;
 }
 
-.user-box{
+.username-box{
     flex: 0 0 auto;
     padding: 6px 6px 6px 6px;
     border-radius: 10px;
     z-index: 10;
 }
 
-.user-box > span{
+.username-box > span{
     font-size: {{userFontSize}}px;
     color: white;
 }
 
-.spacer{
-    flex: 1 1 auto;
-    background-color: transparent;
-}
-
-.spacer2{
+.outer-spacer{
     flex: 0 1 auto;
     background-color: transparent;
+    border: 1px solid red;
 }
 
-.user-message{
+.inner-spacer{
+    flex: 1 1 auto;
+    background-color: transparent;
+    border: 1px solid blue;
+}
+
+.message-container{
+    display: inline-flex;
+    flex: 0 0 auto;
+}
+
+.message-box{
     display: inline;
     width: auto;
     font-size: {{messageFontSize}}px;
@@ -115,7 +95,7 @@
 }
 
 .emote{
-  height: {{emoteSize}}px;
+    height: {{emoteSize}}px;
     vertical-align: middle;
     background-repeat: no-repeat;
     padding-bottom: 2px;
@@ -124,7 +104,7 @@
 }
 
 .large-emote{
-  height: {{largeEmoteSize}}px;
+    height: {{largeEmoteSize}}px;
     vertical-align: middle;
     background-repeat: no-repeat;
     padding-bottom: 2px;
@@ -134,6 +114,7 @@
 
 .message-shadow{
     border-radius: 20px;
+    margin: 8px;
     position: absolute;
     z-index: 3;
 }
@@ -143,12 +124,6 @@
     height: 44px;
     background-color: white;
     border-radius: 50%;
-    display: block;
     position: absolute;
     z-index: 3;
-}
-
-
-.action{
-    font-style: italic;
 }
