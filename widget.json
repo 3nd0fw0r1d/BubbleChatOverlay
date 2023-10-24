@@ -130,6 +130,32 @@
     },
     "group": "Settings"
   },
+  "smoothScrolling": {
+    "type": "dropdown",
+    "label": "smooth scrolling:",
+    "value": "yes",
+    "options": {
+      "yes": "yes",
+      "no": "no"
+    },
+    "group": "Settings"
+  },
+  "scrollSpeedMultiplier": {
+    "type": "number",
+    "label": "smooth scroll speed multiplier",
+    "value": 0,
+    "group": "Settings"
+  },
+  "animateTilt": {
+    "type": "dropdown",
+    "label": "animate tilt:",
+    "value": "yes",
+    "options": {
+      "yes": "yes",
+      "no": "no"
+    },
+    "group": "Settings"
+  },
   "badgesEnable": {
     "type": "dropdown",
     "label": "enable badges:",
