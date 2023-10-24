@@ -12,7 +12,11 @@ let ignoredUsers = [],
     tiltAngleRange = 0,
     colorValueClip = 80,
     messageFontDarkening = 30,
-    saturationMultiplier = 1;
+    saturationMultiplier = 1,
+    smoothScrolling = "yes",
+    scrollSpeedMultiplier = 1,
+    animateTilt = "no";
+
 
 let current_username_bias = "left";
 const lorem_ipsum = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
@@ -40,6 +44,11 @@ window.addEventListener("onWidgetLoad", function (obj) {
    tiltAngleRange = fieldData.tiltAngleRange;
    colorValueClip = fieldData.colorValueClip;
    messageFontDarkening = fieldData.messageFontDarkening;
+   saturationMultiplier = fieldData.saturationMultiplier;
+   smoothScrolling = fieldData.smoothScrolling;
+   scrollSpeedMultiplier = fieldData.scrollSpeedMultiplier;
+   if (scrollSpeedMultiplier <= 0.1) scrollSpeedMultiplier = 0.1;
+   animateTilt = fieldData.animateTilt;
    channelName = obj.detail.channel.username;
    ignoredUsers = fieldData.ignoredUsers.toLowerCase().replace(" ", "").split(",");
 });
@@ -160,6 +169,8 @@ class UserMessage {
     username_spacer;
     inner_spacer;
     outer_spacer;
+    user_color;
+    msg_color;
     constructor(data, direction) {
         this.container = makeDiv(`message-row {animationIn} animated`);
         this.container.setAttribute("data-sender", data.userId);
@@ -196,118 +207,130 @@ class UserMessage {
 
         this.container.appendChild(this.anim_container);
 		
-      	let user_color = new Color("hsl", [Math.random() * 360, Math.random() * 100, Math.random() * 100]);
+      	this.user_color = new Color("hsl", [Math.random() * 360, Math.random() * 100, Math.random() * 100]);
         if (data.displayColor !== "") {
-          user_color = new Color(data.displayColor);
+          this.user_color = new Color(data.displayColor);
         }
-        user_color.hsl.s *= saturationMultiplier;
-        if (user_color.hsl.l > colorValueClip) {
-            user_color.hsl.l = colorValueClip;
+        this.user_color.hsl.s *= saturationMultiplier;
+        if (this.user_color.hsl.s > 100) this.user_color.hsl.s = 100;
+        if (this.user_color.hsl.l > colorValueClip) {
+            this.user_color.hsl.l = colorValueClip;
         }
-        let msg_color = new Color(user_color);
-        msg_color.hsl.l *= (messageFontDarkening / 100);
+        this.msg_color = new Color(this.user_color);
+        this.msg_color.hsl.l *= (messageFontDarkening / 100);
 
-        this.username_box.style.backgroundColor = user_color.toString();
-        this.username_box.style.textShadow = `-2px 2px 0px ${msg_color.toString()}`;
-        this.message_box.style.color = msg_color.toString();
+        this.username_box.style.backgroundColor = this.user_color.toString();
+        this.username_box.style.textShadow = `-2px 2px 0px ${this.msg_color.toString()}`;
+        this.message_box.style.color = this.msg_color.toString();
 
         let message_container = this.message_container;
         let message_box = this.message_box;
         let both_container = this.both_container;
         let outer_spacer = this.outer_spacer;
         let anim_container = this.anim_container;
-       
-        console.log("step 1...");
+    }
+    post_update(data, direction) {
+        let list_container = document.getElementsByClassName("main-container")[0];
+        const outer_rect = list_container.getBoundingClientRect();
+        let rect = this.message_box.getBoundingClientRect();
+        let perc = rect.width / outer_rect.width;
+        if (perc < 0.7) {
+          perc = 0.7 - perc;
+          this.outer_spacer.style.flex = `${perc} 1 auto`;
+        }
 
-        setTimeout(function() {
-            console.log("step 2...");
-			let list_container = document.getElementsByClassName("main-container")[0];
-          	const outer_rect = list_container.getBoundingClientRect();
-            let rect = message_box.getBoundingClientRect();
-            let perc = rect.width / outer_rect.width;
-            if (perc < 0.7) {
-                perc = 0.7 - perc;
-                outer_spacer.style.flex = `${perc} 1 auto`;
-            }
+        let shadow_elem = makeDiv("message-shadow");
+        shadow_elem.style.width = `${rect.width}px`;
+        shadow_elem.style.height = `${rect.height}px`;
+        shadow_elem.style.transform = `translate({bubbleXOffset}px, ${bubbleYOffset - 16}px)`;
+        shadow_elem.style.backgroundColor = this.user_color.toString();
 
-            let shadow_elem = makeDiv("message-shadow");
-            shadow_elem.style.width = `${rect.width}px`;
-            shadow_elem.style.height = `${rect.height}px`;
-            shadow_elem.style.transform = `translate({bubbleXOffset}px, ${bubbleYOffset - 16}px)`;
-            shadow_elem.style.backgroundColor = user_color.toString();
+        this.message_container.appendChild(shadow_elem);
 
-            message_container.appendChild(shadow_elem);
+        let xy_arr = [];
+        if (direction === "left") {
+          xy_arr = [ // position of all the bubbles :)
+            [rect.width * 0.4, 16],
+            [8, rect.height * 0.6],
+            [rect.width + 8, rect.height * 0.6],
+            [rect.width - 35, rect.height + 4],
+            [rect.width - 66, rect.height - 4],
+            [rect.width - 58, rect.height + 18],
+            [rect.width - 42, rect.height + 26]
+          ];
+        } else {
+          xy_arr = [
+            [rect.width * 0.6, 16],
+            [rect.width + 8, rect.height * 0.6],
+            [12 + 4, rect.height * 0.6],
+            [35 + 8, rect.height + 4],
+            [66 + 8, rect.height - 4],
+            [58 + 8, rect.height + 18],
+            [42 + 8, rect.height + 26]
+          ];
+        }
+        const size_arr = [44, 20, 28, 30, 26, 16, 10];
 
-            let xy_arr = [];
-            if (direction === "left") {
-                xy_arr = [ // position of all the bubbles :)
-                    [rect.width * 0.4, 16],
-                    [8, rect.height * 0.6],
-                    [rect.width + 8, rect.height * 0.6],
-                    [rect.width - 35, rect.height + 4],
-                    [rect.width - 66, rect.height - 4],
-                    [rect.width - 58, rect.height + 18],
-                    [rect.width - 42, rect.height + 26]
-                ];
-            } else {
-                xy_arr = [
-                    [rect.width * 0.6, 16],
-                    [rect.width + 8, rect.height * 0.6],
-                    [12 + 4, rect.height * 0.6],
-                    [35 + 8, rect.height + 4],
-                    [66 + 8, rect.height - 4],
-                    [58 + 8, rect.height + 18],
-                    [42 + 8, rect.height + 26]
-                ];
-            }
-            const size_arr = [44, 20, 28, 30, 26, 16, 10];
+        if (data.nick !== channelName) {
+          for (let i = 0; i < xy_arr.length; i++) { // background bubbles
+            let x_off = Math.floor(xy_arr[i][0] - (size_arr[i] / 2));
+            let y_off = Math.floor(xy_arr[i][1] - (size_arr[i] / 2)) - 16; // the -16 is to match the CSS offset
+            x_off += bubbleXOffset;
+            y_off += bubbleYOffset;
 
-            if (data.nick !== channelName) {
-                for (let i = 0; i < xy_arr.length; i++) { // background bubbles
-                    let x_off = Math.floor(xy_arr[i][0] - (size_arr[i] / 2));
-                    let y_off = Math.floor(xy_arr[i][1] - (size_arr[i] / 2)) - 16; // the -16 is to match the CSS offset
-                    x_off += bubbleXOffset;
-                    y_off += bubbleYOffset;
+            let test = document.createElement("div");
+            test.className = "bubble";
+            test.style.backgroundColor = this.user_color;
+            test.style.transform = `translate(${x_off}px, ${y_off}px)`;
+            test.style.width = `${size_arr[i]}px`;
+            test.style.height = `${size_arr[i]}px`;
 
-                    let test = document.createElement("div");
-                    test.className = "bubble";
-                    test.style.backgroundColor = user_color;
-                    test.style.transform = `translate(${x_off}px, ${y_off}px)`;
-                    test.style.width = `${size_arr[i]}px`;
-                    test.style.height = `${size_arr[i]}px`;
+            this.message_container.appendChild(test);
+          }
+        }
 
-                    message_container.appendChild(test);
-                }
-            }
+        if (data.nick !== channelName) {
+          for (let i = 0; i < xy_arr.length; i++) { // foreground bubbles
+            let x_off = Math.floor(xy_arr[i][0] - (size_arr[i] / 2));
+            let y_off = Math.floor(xy_arr[i][1] - (size_arr[i] / 2)) - 16;
 
-            if (data.nick !== channelName) {
-                for (let i = 0; i < xy_arr.length; i++) { // foreground bubbles
-                    let x_off = Math.floor(xy_arr[i][0] - (size_arr[i] / 2));
-                    let y_off = Math.floor(xy_arr[i][1] - (size_arr[i] / 2)) - 16;
+            let test = document.createElement("div");
+            test.className = "bubble";
+            test.style.transform = `translate(${x_off}px, ${y_off}px)`;
+            test.style.width = `${size_arr[i]}px`;
+            test.style.height = `${size_arr[i]}px`;
 
-                    let test = document.createElement("div");
-                    test.className = "bubble";
-                    test.style.transform = `translate(${x_off}px, ${y_off}px)`;
-                    test.style.width = `${size_arr[i]}px`;
-                    test.style.height = `${size_arr[i]}px`;
+            this.message_container.appendChild(test);
+          }
+        }
 
-                    message_container.appendChild(test);
-                }
-            }
-
-            let tilt = tiltAngle + ((Math.random() * tiltAngleRange) - (tiltAngleRange / 2));
-            both_container.style.transform = direction === "left" ? `rotate(${tilt * -1}deg)` : `rotate(${tilt * 1}deg)`;
-            console.log("step 3...");
-        }, smallDelay);
-
+        let tilt = tiltAngle + ((Math.random() * tiltAngleRange) - (tiltAngleRange / 2));
+        this.both_container.style.transform = direction === "left" ? `rotate(${tilt * -1}deg)` : `rotate(${tilt * 1}deg)`;
     }
     get elem() {
         return this.container;
     }
 }
 
+function is_message(_inp) {
+    if (_inp.detail.listener !== "message") return false;
+    if (ignoredUsers.indexOf(_inp.detail.event.data.nick) !== -1) return false;
+    return true;
+}
+
+function count_messages() {
+    let counter = 0;
+  	for (let i=0; i < event_list.length; i++) {
+        if (is_message(event_list[i])) counter += 1;
+    }
+    return counter;
+}
+
+let event_list = [];
+let msg_counter = 0;
+
 window.addEventListener('onEventReceived', function(stream_event){
-    console.log(stream_event);
+    //console.log(stream_event);
     if (stream_event.detail.event.listener === "widget-button") {
         if (stream_event.detail.event.field === "testMessage") {
             send_test_message();
@@ -315,33 +338,135 @@ window.addEventListener('onEventReceived', function(stream_event){
         }
     }
   
-    console.log("event?");
+    if (ignoredUsers.indexOf(stream_event.detail.event.nick) !== -1) return;
+    if (is_message(stream_event)) {
+        msg_counter++;
+    }
+    event_list.push(stream_event);
+  
+    //console.log("event?");
     if (stream_event.detail.listener === "delete-message") {
         const msgId = stream_event.detail.event.msgId;
-        $(`.message-row[data-msgid=${msgId}]`).remove();
+        let bad_msg = $(`.message-row[data-msgid=${msgId}]`);
+        height += bad_msg.getBoundingClientRect().height;
+        bad_msg.remove();
         return;
     } else if (stream_event.detail.listener === "delete-messages") {
         const sender = stream_event.detail.event.userId;
-        $(`.message-row[data-sender=${sender}]`).remove();
+        let bad_list = $(`.message-row[data-sender=${sender}]`);
+        for (let i=0; i < bad_list.length; i++) {
+            let bad_msg = bad_list[i];
+            height += bad_msg.getBoundingClientRect().height;
+            bad_msg.remove();
+        }
         return;
     }
-
-    let data = stream_event.detail.event.data;
-    console.log(data);
-
-    if (stream_event.detail.listener !== "message") return;
-    if (ignoredUsers.indexOf(data.nick) !== -1) return;
-
-    let message = new UserMessage(data, current_username_bias);
-
-    let list_container = document.getElementsByClassName("main-container")[0];
-
-    list_container.appendChild(message.elem);
-
-    current_username_bias = current_username_bias === "left" ? "right" : "left";
-
-    let main_spacer = document.getElementsByClassName("main-spacer")[0];
-    while (main_spacer.clientHeight == 0) {
-      list_container.removeChild(list_container.childNodes[2]);
-    }
 });
+
+let avg_list = [];
+let msg_avg = 0;
+function msg_average() {
+    avg_list.push(msg_counter);
+    msg_counter = 0;
+    if (avg_list.length > 12) {
+      	avg_list.shift();
+    }
+    msg_avg = 0;
+    for (let i=0; i < avg_list.length; i++) {
+        msg_avg += avg_list[i];
+    }
+    msg_avg /= avg_list.length;
+    msg_avg *= 4;
+}
+
+setInterval(msg_average, 250);
+
+console.log(document.getElementsByClassName("main-spacer")[0].getBoundingClientRect());
+console.log(document.getElementsByClassName("main-container")[0].getBoundingClientRect());
+let main_container = document.getElementsByClassName("main-container")[0];
+let main_spacer = document.getElementsByClassName("main-spacer")[0];
+let height = main_container.getBoundingClientRect().height;
+main_spacer.style.height = `${height}px`;
+
+
+function process_loop() {
+    //height = main_spacer.getBoundingClientRect().height;
+    let trans_speed = 500;
+    if (smoothScrolling !== "yes") trans_speed = 20;
+    if (event_list.length > 0) {
+        if (is_message(event_list[0])) {
+            let num_messages = count_messages();
+            let data = event_list.shift().detail.event.data;
+            let message = new UserMessage(data, current_username_bias);
+            let list_container = document.getElementsByClassName("main-container")[0];
+            list_container.appendChild(message.elem);
+            if (animateTilt === "yes") {
+                message.both_container.style.transition = "all 800ms";
+            }
+            message.post_update(data, current_username_bias);
+          
+            let message_height = message.elem.getBoundingClientRect().height;
+          
+            if (smoothScrolling === "yes") {
+          
+            	let mult = message_height / (60 * scrollSpeedMultiplier);
+                trans_speed *= mult;
+                if (msg_avg < 0.75) msg_avg = 0.75;
+                trans_speed /= msg_avg;
+            }
+          
+            let ease_type = "ease";
+            if (msg_avg > 5) ease_type = "linear";
+
+            if (message_height > height) {
+                let count = 24;
+                while (message_height >= height) {
+                    let _elem = main_container.children[1];
+                    let elem_height = _elem.getBoundingClientRect().height;
+                    main_container.removeChild(_elem);
+                    height += elem_height;
+                    count -= 1;
+                    if (count <= 0) break;
+                }
+                main_spacer.style.transition = "none";
+                main_spacer.style.minHeight = `${height}px`;
+                console.log(main_spacer.clientHeight); // necessary
+                height -= message_height;
+                if (smoothScrolling === "yes") {
+              	    main_spacer.style.transition = `all ${trans_speed}ms ${ease_type}`;
+                }
+                main_spacer.style.minHeight = `${height}px`;
+            } else {
+                height -= message_height;
+                console.log(main_spacer.clientHeight); // necessary
+                if (smoothScrolling === "yes") {
+                    main_spacer.style.transition = `all ${trans_speed}ms ${ease_type}`;
+                }
+                main_spacer.style.minHeight = `${height}px`;
+            }
+
+            current_username_bias = current_username_bias === "left" ? "right" : "left";
+        } else {
+            let stream_event = event_list.shift();
+            if (stream_event.detail.listener === "delete-message") {
+                const msgId = stream_event.detail.event.msgId;
+                let bad_msg = $(`.message-row[data-msgid=${msgId}]`);
+                height += bad_msg.getBoundingClientRect().height;
+                bad_msg.remove();
+            } else if (stream_event.detail.listener === "delete-messages") {
+                const sender = stream_event.detail.event.userId;
+                let bad_list = $(`.message-row[data-sender=${sender}]`);
+                for (let i=0; i < bad_list.length; i++) {
+                    let bad_msg = bad_list[i];
+                    height += bad_msg.getBoundingClientRect().height;
+                    bad_msg.remove();
+                }
+            }
+        }
+    } else {
+        trans_speed = 20;
+    }
+    setTimeout(process_loop, trans_speed);
+}
+
+setTimeout(process_loop, 500);
